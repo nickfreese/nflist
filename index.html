@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+	
+<head>
+	<style>
+    body{
+       display:flex;
+       flex-direction:column;
+    }
+	.myList, .objectList{
+		display:inline-block;
+
+	}
+		
+
+    /*
+    * suggested styling
+    */
+
+    ul{
+    	display:inline-block;
+    	margin-left:0;
+    	padding-left:0;
+    }
+    
+    ul li{
+    	position:relative;
+    	overflow:hidden;
+    	padding-right:2em;
+    	cursor: move; /* fallback if grab cursor is unsupported */
+        cursor: grab;
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
+    }
+    ul li .remove{
+ 
+    	position:absolute;
+    	right:0;
+    	top:50%;
+    	transform:translate(1em, -50%);
+    	height:100%;
+    	box-sizing:border-box;
+    	text-align:center;
+    	width:1em;
+    	display: flex;
+      	justify-content: center;
+      	align-items: center;
+      	cursor:pointer;
+    }
+
+    ul li .remove::after {
+        content: "\00D7";
+        clear: both;
+        display: table;
+    }
+
+    ul li:hover .remove{
+    	
+      	transition: all 0.2s ease-out;
+      	top:50%;
+      	transform: translate(0em, -50%);
+    }
+
+
+    ul li .edit{
+    	position:absolute;
+    	right:1em;
+    	top:50%;
+    	transform:translate(2em, -50%);
+    	height:100%;
+    	box-sizing:border-box;
+    	text-align:center;
+    	width:1em;
+    	display: flex;
+      	justify-content: center;
+      	align-items: center;
+      	cursor:pointer;
+    }
+
+    ul li .edit::after {
+        content: "\270E";
+        clear: both;
+        display: table;
+    }
+
+    ul li:hover .edit{
+    	
+      	transition: all 0.2s ease-out;
+      	top:50%;
+      	transform: translate(0em, -50%);
+    }
+
+    ul li.over{
+    	background:#dddddd70;
+    }
+
+    /*
+    * Edit modal
+    */
+
+    .nf-list-modal-outer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: #00000050;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .nf-list-modal-inner {
+      width: auto;
+      min-width:50%;
+      height:auto;
+      max-height: 90vh;
+      background: #fff;
+      box-sizing: border-box;
+      padding: 1em;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    .nf-list-edit-field{
+    	margin-top:1em;
+    }
+
+    .nf-list-modal-inner textarea{
+    	width:100%;
+    }
+
+	</style>
+	<script src="list.js"></script>
+</head>
+<body>
+
+	<h1>NF List Examples</h1>
+	<div class="testlist"></div>
+
+
+    <h2 style="margin-top:3em">Example 1</h2>
+	<div class="myList"></div>
+
+
+    <h2 style="margin-top:3em">Example 2 - list of objects</h2>
+	<div class="objectList"></div>
+	
+<script>
+
+    var testlist = window.nf_list({
+		element:".testlist",
+		enable_drag:true,
+		allow_adding:false,
+	},[
+	"Lists items can be dragged and dropped to rearrange order",
+	"Hovering over a list item will give the option to delete or edit a list item",
+	`Items added can be json objects: <code style="background:#eaeaea" >{"name": "pudding", "value":99}</code>`,
+	`The frontend will use the whichever field you define in the <code style="background:#eaeaea">front_key</code> setting`,
+	`If <code style="background:#eaeaea">front_key</code> is not defined, objects will render using <code>template</code> setting`,
+	`get list items like this: <code style="background:#eaeaea">myList.items</code>`,
+	`add items programmatically items like this: <code style="background:#eaeaea">myList.push("some list item")</code>`
+
+	]);
+
+
+    /*
+    *  listen for creation of a list.
+    */
+    document.querySelector(".myList").addEventListener('nflistcreated', function(e){
+    	e = e || window.e;
+    	console.log("my list was initialized!", e.detail.list);
+    });
+
+
+    /*
+    * create a list!
+    */
+	var list = window.nf_list({
+		element:".myList",
+		enable_drag:true
+	},[
+	"first item",
+	"second Item"
+	]);
+
+    
+
+    /*
+    * create another list!
+    */
+	var list2 = window.nf_list({
+		element:".objectList",
+		enable_drag:true,
+		front_key:"name",
+		template:`<div class="item-value" style="border-bottom:1px solid #e3e3e3">^^name/^^:<code class="item-value-var" style="margin:0;padding:0">^^value/^^</code></div>`,
+	},[
+	{
+		"name":"A list item",
+		"value":35
+	},
+	{
+		"name":"zebras",
+		"value":87
+	},
+	{
+		"name":"orange",
+		"value":768.4
+	}
+	]);
+
+
+
+    /*
+    *  listen for updates to your list
+    */
+    document.querySelector(".myList").addEventListener('nflistupdated', function(e){
+    	e = e || window.e;
+    	console.log("my list was updated!", e.detail.list);
+
+    	// e.detail.list.push() //this would cause an infinit loop, so don't add items based on updating of the list.
+    });
+
+
+
+
+
+
+	//{"name": "pudding", "value":99}
+
+
+</script>
+</body>
+</html>
