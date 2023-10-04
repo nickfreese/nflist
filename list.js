@@ -12,6 +12,8 @@
             },
             id: "___" + Math.random().toString(16).slice(2),
 
+            startFocus:null,
+
             init: function(s) {
                 var _this = this;
                 for (key in s) {
@@ -50,6 +52,9 @@
                 
                 _this.render();
                 _this.fireListUpdated();
+                if (_this.startFocus) {
+                	document.querySelector("#"+_this.id + ` li[data-nf-list="`+_this.startFocus+`"]`).focus();
+                }
 
             },
 
@@ -115,12 +120,12 @@
                 for (let i = 0; i < _this.items.length; i++) {
 
                     if (typeof _this.items[i] === 'object' && _this.items[i] !== null && _this.s.front_key && typeof _this.s.template == "undefined") {
-                        html += `<li data-nf-list="` + i + `" ` + _this.getDraggable() + `>` + _this.items[i][_this.s.front_key] + `<span class="edit"></span><span class="remove"></span></li>`;
+                        html += `<li data-nf-list="` + i + `" ` + _this.getDraggable() + `>` + _this.items[i][_this.s.front_key] + `<button class="edit"></button><button class="remove"></button></li>`;
                     } else if (typeof _this.items[i] === 'object' && _this.items[i] !== null) {
-                        html += `<li data-nf-list="` + i + `" ` + _this.getDraggable() + `>` + _this.processTemplate(_this.items[i]) + `<span class="edit"></span><span class="remove"></span></li>`;
+                        html += `<li data-nf-list="` + i + `" ` + _this.getDraggable() + `>` + _this.processTemplate(_this.items[i]) + `<button class="edit"></button><button class="remove"></button></li>`;
 
                     } else {
-                        html += `<li data-nf-list="` + i + `" ` + _this.getDraggable() + `>` + _this.items[i] + `<span class="edit"></span><span class="remove"></span></li>`;
+                        html += `<li data-nf-list="` + i + `" ` + _this.getDraggable() + `>` + _this.items[i] + `<button class="edit"></button><button class="remove"></button></li>`;
                     }
                 }
                 html += `</ul>` + _this.buildNewItemHTML() + `<div class="nf-list-edit-modal-container"></div>`;
@@ -218,7 +223,6 @@
 
             	const edit = function(e){
             		e == e || window.e;
-            		console.log("open editing");
             		document.querySelector(_this.s.element + " .nf-list-edit-modal-container").innerHTML = _this.buildEditModal(_this.items[this.parentElement.getAttribute("data-nf-list")], this.parentElement.getAttribute("data-nf-list"));
                     _this.setFormListeners();
             	};
@@ -376,7 +380,10 @@
             setFormListeners:function(){
             	let _this = this;
 
+
+
                 var inputs = document.querySelectorAll(_this.s.element + " .nf-list-edit textarea");
+                inputs[0].focus();
                 for (let i = 0; i < inputs.length;i++) {
 
                 	if (inputs[i].getAttribute("name") == _this.id+`string_value`) {
@@ -392,9 +399,8 @@
             	document.querySelector(_this.s.element + " .nf-list-edit-save").addEventListener("click", function(e){
             		e = e || window.e;
             		e.preventDefault();
-            		console.log("do saving");
             		var inputs = document.querySelectorAll(_this.s.element + " .nf-list-edit textarea");
-            		console.log(inputs);
+            		var last = null;
                     for (let i = 0; i < inputs.length;i++) {
 
                     	if (inputs[i].getAttribute("name") == _this.id+`string_value`) {
@@ -405,9 +411,10 @@
                             _this.items[inputs[i].getAttribute("data-nf-list")][inputs[i].getAttribute("name")] = inputs[i].value;
                     	}
 
-                        
+                        last = inputs[i].getAttribute("data-nf-list");
                         
                     }
+                    _this.startFocus = last;
                     _this.callReactive(false);
 
             	}, false);

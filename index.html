@@ -25,19 +25,16 @@
     
     ul li{
     	position:relative;
-    	overflow:hidden;
+    	overflow:clip;
     	padding-right:2em;
     	cursor: move; /* fallback if grab cursor is unsupported */
         cursor: grab;
         cursor: -moz-grab;
         cursor: -webkit-grab;
     }
-    ul li .remove{
- 
+    ul li .remove, ul li .edit{
     	position:absolute;
-    	right:0;
     	top:50%;
-    	transform:translate(1em, -50%);
     	height:100%;
     	box-sizing:border-box;
     	text-align:center;
@@ -46,6 +43,14 @@
       	justify-content: center;
       	align-items: center;
       	cursor:pointer;
+      	background:none;
+      	border:none;
+      	border-radius:none;
+
+    }
+    ul li .remove{
+        right:0em;
+    	transform:translate(1em, -50%);
     }
 
     ul li .remove::after {
@@ -54,27 +59,17 @@
         display: table;
     }
 
-    ul li:hover .remove{
+    ul li:hover .remove, ul li .remove:focus{
     	
       	transition: all 0.2s ease-out;
-      	top:50%;
       	transform: translate(0em, -50%);
     }
 
 
+
     ul li .edit{
-    	position:absolute;
     	right:1em;
-    	top:50%;
     	transform:translate(2em, -50%);
-    	height:100%;
-    	box-sizing:border-box;
-    	text-align:center;
-    	width:1em;
-    	display: flex;
-      	justify-content: center;
-      	align-items: center;
-      	cursor:pointer;
     }
 
     ul li .edit::after {
@@ -83,10 +78,9 @@
         display: table;
     }
 
-    ul li:hover .edit{
+    ul li:hover .edit,  ul li .edit:focus{
     	
       	transition: all 0.2s ease-out;
-      	top:50%;
       	transform: translate(0em, -50%);
     }
 
