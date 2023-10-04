@@ -1,5 +1,5 @@
 # NF List
-- UI component for orderable, editable lists
+UI component for orderable, editable lists
 
 ## Usage
 
