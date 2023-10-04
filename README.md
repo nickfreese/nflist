@@ -1,5 +1,5 @@
 # NF List
-- UI interface for generating an orderable, editable, UI for lists.
+- UI component for orderable, editable lists
 
 ## Usage
 
@@ -15,7 +15,7 @@ nf_list(<settings>[, <items>])
  - `allow_adding` boolean to toggle the add item form.  defaults to `true`
  - `template` when rendering objects, we can use a template to render multiple fields.  Defaults to `<div class="item-value">^^name/^^</div>`
  - `front_key` the object key to use for the frontend view on an object list item instead of using a template. Defaults to `false`
- 
+
 
 ### basic list
 ```
