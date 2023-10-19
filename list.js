@@ -273,10 +273,33 @@
                     }
 
                     if (_this.dragSrcEl != this) {
-                        _this.dragSrcEl.innerHTML = this.innerHTML;
-                        _this.dragSrcEl.setAttribute("data-nf-list", this.getAttribute("data-nf-list"))
-                        this.innerHTML = e.dataTransfer.getData('text/html');
-                        this.setAttribute("data-nf-list", e.dataTransfer.getData('key'));
+
+                       if (Number(this.getAttribute("data-nf-list")) > Number(e.dataTransfer.getData('key'))) {
+                            //shift up
+                            var start = Number(e.dataTransfer.getData('key'));
+                            var end = Number(this.getAttribute("data-nf-list"));
+                            let items = document.querySelectorAll('#' + _this.id + ' li');
+                            for (var i = start; i < end; i++) {
+                            	items[i].innerHTML = items[i+1].innerHTML;
+                            	items[i].setAttribute("data-nf-list", items[i+1].getAttribute("data-nf-list"));
+                            }
+                            this.innerHTML = e.dataTransfer.getData('text/html');
+                            this.setAttribute("data-nf-list", e.dataTransfer.getData('key'));
+
+                       } else {
+                       	    //shift down
+                       	    var end = Number(e.dataTransfer.getData('key'));
+                            var start = Number(this.getAttribute("data-nf-list"));
+                            let items = document.querySelectorAll('#' + _this.id + ' li');
+                            for (var i = end; i > start; i--) {
+                            	items[i].innerHTML = items[i-1].innerHTML;
+                            	items[i].setAttribute("data-nf-list", items[i-1].getAttribute("data-nf-list"));
+                            }
+                            this.innerHTML = e.dataTransfer.getData('text/html');
+                            this.setAttribute("data-nf-list", e.dataTransfer.getData('key'));
+                       	    
+                       }
+
                     }
                     _this.callReactive();
                     return false;
